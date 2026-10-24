@@ -1,0 +1,3 @@
+import {pbkdf2Sync,randomBytes,timingSafeEqual} from "node:crypto";
+export function hashPassword(password:string,salt=randomBytes(16).toString("hex")){return `pbkdf2-sha256:210000:${salt}:${pbkdf2Sync(password,salt,210000,32,"sha256").toString("hex")}`;}
+export function verifyPassword(password:string,stored:string){try{const [algorithm,iterations,salt,digest,...extra]=stored.split(":");if(extra.length||algorithm!=="pbkdf2-sha256"||iterations!=="210000"||!/^[0-9a-f]{32}$/.test(salt)||!/^[0-9a-f]{64}$/.test(digest)||password.length>256)return false;const actual=pbkdf2Sync(password,salt,210000,32,"sha256"),expected=Buffer.from(digest,"hex");return timingSafeEqual(actual,expected);}catch{return false;}}

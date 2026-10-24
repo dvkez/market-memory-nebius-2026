@@ -1,0 +1,9 @@
+.*
+!.gitignore
+node_modules/
+outputs/
+docs/
+*.tsbuildinfo
+*.private.txt
+credentials*
+next-env.d.ts
