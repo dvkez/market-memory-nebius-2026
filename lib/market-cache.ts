@@ -1,7 +1,8 @@
 import { z } from "zod";
+import {tickerOf} from "./domain.ts";
 const day=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(d=>Number.isFinite(Date.parse(d))&&new Date(d).toISOString().slice(0,10)===d);
 const bar=z.object({date:day,open:z.number().positive().finite(),high:z.number().positive().finite(),low:z.number().positive().finite(),close:z.number().positive().finite(),volume:z.number().int().nonnegative().finite()}).strict().refine(p=>p.low<=Math.min(p.open,p.close)&&p.high>=Math.max(p.open,p.close)&&p.low<=p.high);
-const snapshot=z.object({ticker:z.enum(["NVDA","AMD","MSFT"]),prices:z.array(bar).min(1).max(120),splitDates:z.array(day).max(100),splitVerified:z.boolean(),at:z.string().datetime()}).strict();
+const snapshot=z.object({ticker:z.string().refine(value=>{try{return tickerOf(value)===value;}catch{return false;}},"Invalid stock symbol"),prices:z.array(bar).min(1).max(120),splitDates:z.array(day).max(100),splitVerified:z.boolean(),at:z.string().datetime()}).strict();
 export const PRICE_CACHE_TTL=18*3600000;
 export function validateMarketCache(input:unknown,now=Date.now()){
   const value=snapshot.parse(input),age=now-Date.parse(value.at);

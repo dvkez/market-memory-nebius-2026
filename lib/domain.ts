@@ -3,10 +3,15 @@ export const COMPANIES = {
   AMD: { name: "Advanced Micro Devices", sector: "Semiconductors", color: "#ffb68a" },
   MSFT: { name: "Microsoft", sector: "Cloud & enterprise AI", color: "#91baff" },
 } as const;
-export type Ticker = keyof typeof COMPANIES;
+export type Ticker = string;
 export function tickerOf(value: unknown): Ticker {
-  if (typeof value !== "string" || !Object.hasOwn(COMPANIES, value.toUpperCase())) throw new Error("Choose NVDA, AMD or MSFT.");
-  return value.toUpperCase() as Ticker;
+  if (typeof value !== "string") throw new Error("Enter a US stock symbol, such as AAPL.");
+  const ticker=value.trim().toUpperCase();
+  if (!/^[A-Z]{1,5}(?:\.[A-Z]{1,2})?$/.test(ticker)) throw new Error("Enter a valid US stock symbol, such as AAPL or BRK.B.");
+  return ticker;
+}
+export function companyOf(ticker:Ticker):{name:string;sector:string;color:string}{
+  return Object.hasOwn(COMPANIES,ticker) ? COMPANIES[ticker as keyof typeof COMPANIES] : {name:ticker,sector:"US stock symbol · verify issuer",color:"#b6ef63"};
 }
 export type Source = {
   id: string; url: string; title: string; excerpt: string; publishedAt: string | null;

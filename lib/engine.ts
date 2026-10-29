@@ -1,4 +1,4 @@
-import { COMPANIES, calculateMetrics, deduplicate, nextDate } from "./domain.ts";
+import { COMPANIES, companyOf, calculateMetrics, deduplicate, nextDate } from "./domain.ts";
 import type { Analysis, Backfill, Source, Ticker } from "./domain.ts";
 import { Providers } from "./providers.ts";
 import { Store } from "./store.ts";
@@ -36,8 +36,10 @@ export class Engine {
     a.leaseUntil=new Date(Date.now()+180000).toISOString();
     try {
       if (a.stage==="collect") {
-        const company=COMPANIES[a.ticker].name;
-        const queries=[`${company} ${a.ticker} latest company developments earnings AI`,`${company} ${a.ticker} industry competition semiconductor cloud demand`,`${company} ${a.ticker} risks contrary evidence demand concerns`];
+        const company=companyOf(a.ticker).name;
+        const queries=Object.hasOwn(COMPANIES,a.ticker)
+          ? [`${company} ${a.ticker} latest company developments earnings AI`,`${company} ${a.ticker} industry competition semiconductor cloud demand`,`${company} ${a.ticker} risks contrary evidence demand concerns`]
+          : [`${company} stock company latest developments earnings`,`${company} stock industry competition market demand`,`${company} stock risks contrary evidence concerns`];
         const search=async()=>{
           if (!this.providers.config.tavilyKey) return;
           // Reserve this investigation's three-call allowance before sending requests.

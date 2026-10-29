@@ -1,6 +1,6 @@
 # Market Memory
 
-Market Memory is an evidence-led research workspace for NVDA, AMD, and MSFT. It brings together daily market data, web sources, and previous research to help users revisit a company's changing story.
+Market Memory is an evidence-led research workspace for US stock symbols. Select NVDA, AMD, or MSFT, or enter another symbol such as AAPL, AMZN, or TSLA. It brings together daily market data, web sources, and previous research to help users revisit a company's changing story.
 
 ## Features
 
@@ -12,6 +12,8 @@ Market Memory is an evidence-led research workspace for NVDA, AMD, and MSFT. It 
 - Report provider errors and data coverage without silently replacing real data with mock data.
 
 Web results are a sample of retrieved sources, not a measure of total internet conversation. Correlations are exploratory associations, not predictions or evidence of causation. The application does not place trades.
+
+Additional symbols are subject to the market data provider's coverage, plan, and quota. The app checks symbol format but does not verify the company name or exchange for manually entered symbols; verify the issuer against the cited sources. Session alignment assumes US market hours. The optional 90-day historical reconstruction remains specific to NVDA.
 
 ## Requirements
 
