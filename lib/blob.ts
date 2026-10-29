@@ -1,4 +1,5 @@
 import {getStore} from "@netlify/blobs";
+import {fetch as nodeFetch} from "undici";
 import {createHash,randomUUID} from "node:crypto";
 import {mkdirSync,readFileSync,writeFileSync,renameSync,readdirSync,existsSync,unlinkSync} from "node:fs";
 import path from "node:path";
@@ -8,7 +9,7 @@ const storageFetch:typeof fetch=async(input,init)=>{
   const start=Date.now();
   const warning=setTimeout(()=>console.warn("[storage] request pending for more than 4 seconds"),4000);
   try{
-    const response=await globalThis.fetch(input,init);
+    const response=await nodeFetch(input as Parameters<typeof nodeFetch>[0],init as Parameters<typeof nodeFetch>[1]) as unknown as Response;
     if(response.status===403||response.status===429||response.status>=500)console.warn(`[storage] HTTP ${response.status}; elapsed ${Date.now()-start}ms`);
     return response;
   }catch{
